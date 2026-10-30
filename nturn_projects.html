@@ -1,0 +1,2199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NTURN Projects — Build, Manage, and Create</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Caveat & Kalam for Odoo-style handwritten hero, Inter for clean Google/Microsoft UI -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Inter:wght@300;400;500;600;700&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        hand: ['Kalam', 'Caveat', 'cursive'],
+                        caveat: ['Caveat', 'cursive']
+                    },
+                    colors: {
+                        plum: {
+                            DEFAULT: '#714B67',
+                            hover: '#5d3d54',
+                            light: '#f5eff4'
+                        },
+                        surface: {
+                            grey: '#f3f4f6'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Smooth Styling & Handwritten Highlights */
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1e293b;
+            overflow-x: hidden;
+        }
+
+        /* Realistic Golden-Yellow Marker Highlight behind "NTURN Projects." */
+        .marker-highlight {
+            position: relative;
+            display: inline-block;
+            z-index: 1;
+            padding: 0 10px;
+        }
+
+        .marker-highlight::before {
+            content: "";
+            position: absolute;
+            left: -4px;
+            right: -6px;
+            top: 8%;
+            bottom: 6%;
+            background: #fbbf24;
+            z-index: -1;
+            border-radius: 14px 6px 12px 8px / 8px 14px 6px 12px;
+            transform: rotate(-1.2deg);
+            box-shadow: 0 3px 0 rgba(245, 158, 11, 0.25);
+        }
+
+        /* Hand-drawn Sky Blue Underline beneath "built for you!" */
+        .blue-underline {
+            position: relative;
+            display: inline-block;
+        }
+
+        .blue-underline::after {
+            content: "";
+            position: absolute;
+            left: -2%;
+            right: -2%;
+            bottom: -4px;
+            height: 7px;
+            background: #38bdf8;
+            border-radius: 50% 30% 60% 40% / 70% 50% 40% 60%;
+            transform: rotate(-1.5deg);
+        }
+
+        /* Smooth Upward Arch Divider between White Hero and Grey App Grid */
+        .hero-arch-wrapper {
+            position: relative;
+            background-color: #ffffff;
+            overflow: hidden;
+        }
+
+        .arch-svg-divider {
+            display: block;
+            width: 100%;
+            height: 75px;
+            background-color: #ffffff;
+        }
+
+        @media (max-width: 640px) {
+            .arch-svg-divider {
+                height: 40px;
+            }
+        }
+
+        /* Odoo-style White Squircle App Cards (78px x 78px) */
+        .nturn-app-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+            user-select: none;
+        }
+
+        .nturn-app-item:hover {
+            transform: translateY(-6px);
+        }
+
+        .nturn-app-item:active {
+            transform: translateY(-2px) scale(0.97);
+        }
+
+        .nturn-squircle {
+            width: 78px;
+            height: 78px;
+            background: #ffffff;
+            border-radius: 18px;
+            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.04);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: box-shadow 0.22s ease, border-color 0.22s ease;
+            border: 1px solid rgba(226, 232, 240, 0.7);
+        }
+
+        .nturn-app-item:hover .nturn-squircle {
+            box-shadow: 0 14px 28px rgba(15, 23, 42, 0.11), 0 4px 10px rgba(15, 23, 42, 0.05);
+            border-color: rgba(113, 75, 103, 0.35);
+        }
+
+        @media (max-width: 640px) {
+            .nturn-squircle {
+                width: 72px;
+                height: 72px;
+                border-radius: 16px;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 7px;
+            height: 7px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Modal Backdrop Transition */
+        .modal-backdrop {
+            background-color: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(4px);
+            transition: opacity 0.2s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- ==================== TOP WHITE SURFACE: HEADER + HERO ==================== -->
+    <div class="hero-arch-wrapper">
+        <!-- Responsive Top Navigation Bar (Clean Left vs Right Split) -->
+        <header class="max-w-7xl mx-auto px-4 sm:px-8 pt-4 pb-3 flex flex-wrap items-center justify-between gap-3 border-b border-slate-100/80">
+            
+            <!-- Top-Left Side: Brand ("NTURN Projects") + Customize, Connect Apps, PDF Guides -->
+            <div class="flex items-center flex-wrap gap-2 sm:gap-2.5">
+                <a href="#" onclick="resetFilter(); return false;" class="flex items-center gap-2 mr-1 sm:mr-3 group">
+                    <div class="w-8 h-8 rounded-lg bg-plum text-white flex items-center justify-center font-bold text-lg shadow-sm group-hover:bg-plum-hover transition">
+                        N
+                    </div>
+                    <div class="flex items-baseline gap-1.5">
+                        <span class="font-bold text-lg sm:text-xl tracking-tight text-slate-800">NTURN</span>
+                        <span class="font-semibold text-sm sm:text-base text-plum">Projects</span>
+                    </div>
+                </a>
+
+                <!-- Left Button 1: Customize -->
+                <button onclick="openModal('customizeModal')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 shadow-2xs transition">
+                    <i class="fa-solid fa-sliders text-plum"></i>
+                    <span>Customize</span>
+                </button>
+
+                <!-- Left Button 2: Connect Apps -->
+                <button onclick="openModal('connectAppsModal')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 shadow-2xs transition">
+                    <i class="fa-solid fa-diagram-project text-sky-600"></i>
+                    <span>Connect Apps</span>
+                    <span id="activeConnectionsBadge" class="ml-0.5 px-1.5 py-0.2 bg-sky-50 text-sky-700 rounded-full text-[11px] font-semibold">4</span>
+                </button>
+
+                <!-- Left Button 3: PDF Guides -->
+                <button onclick="openModal('pdfGuidesModal')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium text-slate-700 bg-white hover:bg-rose-50/60 border border-slate-200 shadow-2xs transition">
+                    <i class="fa-regular fa-file-pdf text-rose-600"></i>
+                    <span>PDF Guides</span>
+                </button>
+            </div>
+
+            <!-- Top-Right Side: Auto-save status badge, Export Backup & Import Backup -->
+            <div class="flex items-center flex-wrap gap-2">
+                <!-- Auto-save status indicator -->
+                <div class="hidden md:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200/80 text-emerald-700 text-xs font-medium" title="All changes automatically save in your browser storage">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span id="storageStatusText">All data saved locally</span>
+                </div>
+
+                <!-- Export Backup Button -->
+                <button onclick="exportFullBackup()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 shadow-2xs transition" title="Download all NTURN Projects data as a .json backup file">
+                    <i class="fa-solid fa-download text-emerald-600"></i>
+                    <span>Export Backup</span>
+                </button>
+
+                <!-- Import Backup Button -->
+                <label class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium text-white bg-plum hover:bg-plum-hover cursor-pointer shadow-xs transition" title="Restore data from a previously exported .json backup file">
+                    <i class="fa-solid fa-upload"></i>
+                    <span>Import Backup</span>
+                    <input type="file" id="importBackupInput" accept=".json" class="hidden" onchange="importFullBackup(event)">
+                </label>
+            </div>
+        </header>
+
+        <!-- ==================== ODOO-INSPIRED HERO SECTION (OPTION 2) ==================== -->
+        <section class="max-w-5xl mx-auto px-4 sm:px-6 pt-10 sm:pt-14 pb-8 text-center relative">
+            <!-- Main Handwritten Heading -->
+            <h1 class="font-hand font-bold text-4xl sm:text-6xl md:text-[62px] text-slate-900 tracking-tight leading-[1.18] mb-3">
+                Build, manage, and create with <span class="marker-highlight">NTURN Projects.</span>
+            </h1>
+
+            <!-- Handwritten Subtitle -->
+            <p class="font-hand text-2xl sm:text-4xl md:text-[42px] text-slate-800 leading-snug mb-9">
+                Fast, simple, and <span class="blue-underline">built for you!</span>
+            </p>
+
+            <!-- CTA Buttons & Handwritten Side Note with Arrow -->
+            <div class="relative inline-flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4 mt-2 mb-4">
+                <button onclick="scrollToApps()" class="px-7 py-3.5 rounded-lg bg-plum hover:bg-plum-hover text-white font-semibold text-sm sm:text-base shadow-sm transition transform active:scale-95">
+                    Start now - It's free
+                </button>
+                <button onclick="openModal('pdfGuidesModal')" class="px-7 py-3.5 rounded-lg bg-slate-100 hover:bg-slate-200/80 text-slate-700 font-semibold text-sm sm:text-base transition flex items-center gap-2">
+                    <i class="fa-regular fa-file-pdf text-rose-600"></i>
+                    <span>PDF Guides</span>
+                </button>
+
+                <!-- Handwritten Curved Arrow & Callout -->
+                <div class="hidden md:block absolute -right-64 -top-6 w-56 text-left pointer-events-none select-none">
+                    <!-- Curved Arrow SVG pointing from built for you! to the note -->
+                    <svg class="w-16 h-12 text-plum -ml-6 mb-1" viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 10 C 30 12, 52 25, 65 50" stroke="#714B67" stroke-width="2.2" stroke-linecap="round"/>
+                        <path d="M55 48 L 66 51 L 67 39" stroke="#714B67" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <div class="font-caveat font-bold text-2xl leading-tight text-plum -rotate-6">
+                        100% Free & Local Backup<br>for ALL apps
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Smooth Upward Arch Curve Transitioning into Soft Grey (#f3f4f6) -->
+        <svg class="arch-svg-divider" viewBox="0 0 1440 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,90 Q720,0 1440,90 L1440,90 L0,90 Z" fill="#f3f4f6"></path>
+        </svg>
+    </div>
+
+    <!-- ==================== GREY SURFACE: 20 APPS LAUNCHER GRID ==================== -->
+    <main id="appsSection" class="flex-1 bg-surface-grey pb-28 pt-2 px-4 sm:px-6">
+        <div class="max-w-[980px] mx-auto">
+
+            <!-- Subtle Filter & Search Bar -->
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-3 mb-8 bg-white/80 backdrop-blur-xs p-2.5 rounded-2xl border border-slate-200/80 shadow-2xs">
+                <!-- Category Pills -->
+                <div class="flex items-center flex-wrap justify-center gap-1.5" id="categoryFilterBar">
+                    <button onclick="filterAppsByCategory('all')" data-cat="all" class="cat-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-plum text-white transition">
+                        All Apps (20)
+                    </button>
+                    <button onclick="filterAppsByCategory('productivity')" data-cat="productivity" class="cat-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-medium text-slate-600 hover:bg-slate-100 transition">
+                        Productivity
+                    </button>
+                    <button onclick="filterAppsByCategory('business')" data-cat="business" class="cat-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-medium text-slate-600 hover:bg-slate-100 transition">
+                        Finance & ERP
+                    </button>
+                    <button onclick="filterAppsByCategory('creative')" data-cat="creative" class="cat-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-medium text-slate-600 hover:bg-slate-100 transition">
+                        Creative & Dev
+                    </button>
+                    <button onclick="filterAppsByCategory('pinned')" data-cat="pinned" class="cat-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-medium text-amber-700 hover:bg-amber-50 transition flex items-center gap-1">
+                        <i class="fa-solid fa-star text-amber-500 text-xs"></i>
+                        <span>Favorites</span>
+                    </button>
+                </div>
+
+                <!-- Search Input -->
+                <div class="relative w-full sm:w-56">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                    <input 
+                        type="text" 
+                        id="appSearchInput" 
+                        oninput="renderAppsGrid()" 
+                        placeholder="Search 20 apps..." 
+                        class="w-full pl-8 pr-7 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-700 focus:outline-none focus:border-plum focus:bg-white transition"
+                    >
+                </div>
+            </div>
+
+            <!-- 20 Apps Grid (6 columns on desktop, 4 on tablet, 3 on mobile - matching Odoo screenshot) -->
+            <div id="appsGridContainer" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-y-8 gap-x-4 sm:gap-x-6 justify-items-center">
+                <!-- Dynamically populated via JS -->
+            </div>
+
+            <!-- Empty Search State -->
+            <div id="emptyAppsState" class="hidden text-center py-12">
+                <div class="w-14 h-14 rounded-2xl bg-white shadow-xs flex items-center justify-center mx-auto mb-3 text-slate-400 text-xl">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+                <p class="text-slate-700 font-semibold">No matching apps found</p>
+                <p class="text-slate-500 text-xs mt-1">Try clearing your search filter or check the Customize panel.</p>
+                <button onclick="resetFilter()" class="mt-3 px-4 py-1.5 rounded-lg bg-plum text-white text-xs font-medium">Reset View</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- ==================== BOTTOM-RIGHT FLOATING FEEDBACK / BUG / SUGGESTION WIDGET ==================== -->
+    <div class="fixed bottom-6 right-6 z-40">
+        <!-- Floating Chat Bubble Button (Matches Bottom-Right Plum Circle in Screenshot) -->
+        <button 
+            onclick="toggleFeedbackPanel()" 
+            id="feedbackLauncherBtn"
+            class="w-14 h-14 rounded-full bg-plum hover:bg-plum-hover text-white shadow-lg hover:shadow-xl flex items-center justify-center text-xl transition transform hover:scale-105 active:scale-95 relative"
+            title="Report a Bug, Suggest a Feature, or Request an App"
+        >
+            <i class="fa-solid fa-comments"></i>
+            <span id="feedbackCountBadge" class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-amber-400 text-slate-900 font-bold text-[11px] flex items-center justify-center shadow-xs">1</span>
+        </button>
+
+        <!-- Popover Suggestion & Bug Report Panel -->
+        <div id="feedbackPopover" class="hidden absolute bottom-18 right-0 w-[340px] sm:w-[380px] bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
+            <!-- Header -->
+            <div class="bg-plum text-white px-5 py-4 flex items-center justify-between">
+                <div>
+                    <h3 class="font-semibold text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-bug-slash text-amber-300"></i>
+                        <span>NTURN Feedback & Suggestions</span>
+                    </h3>
+                    <p class="text-[11px] text-white/80 mt-0.5">Report bugs, request features, or suggest a new app</p>
+                </div>
+                <button onclick="toggleFeedbackPanel()" class="text-white/80 hover:text-white text-lg leading-none p-1">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Body -->
+            <div class="p-4 max-h-[430px] overflow-y-auto space-y-3.5">
+                <!-- Category Tabs -->
+                <div class="grid grid-cols-3 gap-1.5 bg-slate-100 p-1 rounded-xl text-xs font-medium">
+                    <button type="button" onclick="setFeedbackType('Bug Report')" id="fbTabBug" class="fb-tab py-1.5 rounded-lg bg-white text-slate-800 shadow-2xs transition">
+                        🐛 Bug
+                    </button>
+                    <button type="button" onclick="setFeedbackType('Feature Idea')" id="fbTabFeature" class="fb-tab py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition">
+                        ✨ Feature
+                    </button>
+                    <button type="button" onclick="setFeedbackType('New App')" id="fbTabApp" class="fb-tab py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition">
+                        🚀 New App
+                    </button>
+                </div>
+
+                <!-- Target App & Priority -->
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-[11px] font-semibold text-slate-600 mb-1">Related App</label>
+                        <select id="fbAppSelect" class="w-full px-2.5 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-plum">
+                            <option value="NTURN Projects">NTURN Projects (General)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-semibold text-slate-600 mb-1">Priority</label>
+                        <select id="fbPrioritySelect" class="w-full px-2.5 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-plum">
+                            <option value="Medium">Medium Priority</option>
+                            <option value="High">High / Urgent</option>
+                            <option value="Low">Low / Minor</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Message Textarea -->
+                <div>
+                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Your Suggestion or Bug Details</label>
+                    <textarea 
+                        id="fbMessageInput" 
+                        rows="3" 
+                        placeholder="Describe the bug to fix, a new feature to add, or an app idea..."
+                        class="w-full p-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-plum focus:bg-white resize-none"
+                    ></textarea>
+                </div>
+
+                <button onclick="submitFeedbackItem()" class="w-full py-2.5 rounded-xl bg-plum hover:bg-plum-hover text-white font-semibold text-xs shadow-xs transition flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    <span>Save Suggestion to Log</span>
+                </button>
+
+                <!-- Saved Feedback List -->
+                <div class="pt-3 border-t border-slate-100">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Saved Feedback Log</span>
+                        <button onclick="exportFeedbackLog()" class="text-[11px] font-medium text-plum hover:underline flex items-center gap-1">
+                            <i class="fa-solid fa-download"></i> Export Log
+                        </button>
+                    </div>
+                    <div id="feedbackHistoryList" class="space-y-2 max-h-36 overflow-y-auto pr-1">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL 1: APP WORKSPACE & LAUNCHER MODAL ==================== -->
+    <div id="appWorkspaceModal" class="hidden fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-3xl overflow-hidden flex flex-col max-h-[90vh]">
+            <!-- Modal Header -->
+            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/70">
+                <div class="flex items-center gap-3.5">
+                    <div id="modalAppIconBox" class="w-12 h-12 rounded-xl bg-white shadow-xs border border-slate-200 flex items-center justify-center"></div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h2 id="modalAppName" class="font-bold text-lg text-slate-800">App Name</h2>
+                            <span id="modalAppCategoryBadge" class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-slate-200 text-slate-700">Category</span>
+                        </div>
+                        <p id="modalAppDesc" class="text-xs text-slate-500">App module description</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('appWorkspaceModal')" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Modal Content -->
+            <div class="p-6 overflow-y-auto space-y-5 flex-1">
+                <!-- GitHub Pages Sub-Route URL Configuration Bar -->
+                <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
+                    <div class="flex-1">
+                        <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">
+                            <i class="fa-brands fa-github mr-1 text-slate-600"></i> GitHub Pages Module Route / URL
+                        </label>
+                        <input 
+                            type="text" 
+                            id="modalAppRouteInput" 
+                            placeholder="./sheets/index.html or https://..."
+                            class="w-full px-3 py-1.5 text-xs bg-white border border-slate-200 rounded-lg text-slate-700 font-mono focus:outline-none focus:border-plum"
+                        >
+                    </div>
+                    <div class="flex items-center gap-2 sm:pt-4">
+                        <button onclick="saveCurrentAppRoute()" class="px-3 py-1.5 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-medium transition">
+                            Save URL
+                        </button>
+                        <button onclick="launchExternalAppRoute()" class="px-3.5 py-1.5 rounded-lg bg-plum hover:bg-plum-hover text-white text-xs font-semibold transition flex items-center gap-1.5">
+                            <span>Open Full App</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Connected Apps Bar -->
+                <div class="flex items-center justify-between flex-wrap gap-2 px-3.5 py-2.5 rounded-xl bg-sky-50/70 border border-sky-200/70 text-xs">
+                    <div class="flex items-center gap-2 text-sky-900">
+                        <i class="fa-solid fa-link text-sky-600"></i>
+                        <span class="font-semibold">Connected Data Bridges:</span>
+                        <span id="modalConnectedAppsList" class="text-sky-700">None configured</span>
+                    </div>
+                    <button onclick="closeModal('appWorkspaceModal'); openModal('connectAppsModal');" class="text-sky-700 font-semibold hover:underline">
+                        Configure Connections →
+                    </button>
+                </div>
+
+                <!-- Dynamic Inner Workspace: Either Code Templates Studio OR Quick App Scratchpad & Records -->
+                <div id="modalDynamicWorkspace">
+                    <!-- Rendered dynamically via JS -->
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="px-6 py-3.5 border-t border-slate-100 bg-slate-50 flex items-center justify-between text-xs text-slate-500">
+                <span><i class="fa-solid fa-shield-halved text-emerald-600 mr-1"></i> Auto-saved in local browser storage & included in JSON Backup</span>
+                <button onclick="closeModal('appWorkspaceModal')" class="px-4 py-1.5 rounded-lg bg-slate-800 text-white font-medium hover:bg-slate-900 transition">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL 2: PDF GUIDES & TUTORIALS LIBRARY (PDF ONLY) ==================== -->
+    <div id="pdfGuidesModal" class="hidden fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-4xl overflow-hidden flex flex-col max-h-[90vh]">
+            <!-- Header -->
+            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-rose-50/50">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-rose-600 text-white flex items-center justify-center text-lg shadow-xs">
+                        <i class="fa-regular fa-file-pdf"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-bold text-lg text-slate-800">NTURN Projects — PDF Guides & Manuals</h2>
+                        <p class="text-xs text-slate-500">PDF-only documentation library — Upload, preview, and download official `.pdf` guides for all 20 apps</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('pdfGuidesModal')" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Body -->
+            <div class="p-6 overflow-y-auto space-y-6 flex-1">
+                <!-- Upload / Add New PDF Guide Card -->
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/90 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                            <i class="fa-solid fa-file-circle-plus text-rose-600"></i>
+                            <span>Add or Upload a PDF Guide (.pdf only)</span>
+                        </h3>
+                        <span class="text-[11px] text-slate-400">Supports local PDF files or GitHub repo PDF paths</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <input 
+                            type="text" 
+                            id="pdfTitleInput" 
+                            placeholder="Guide Title (e.g. Sheets Formulas Guide)" 
+                            class="px-3 py-2 text-xs bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-plum"
+                        >
+                        <select id="pdfAppTagInput" class="px-3 py-2 text-xs bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-plum">
+                            <option value="All Platform">General Platform Guide</option>
+                        </select>
+                        <input 
+                            type="text" 
+                            id="pdfDescInput" 
+                            placeholder="Short summary or chapter notes..." 
+                            class="px-3 py-2 text-xs bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-plum"
+                        >
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1">
+                        <!-- Option A: Select Local .PDF File -->
+                        <label class="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-xl border border-dashed border-rose-300 bg-white hover:bg-rose-50/40 text-rose-700 text-xs font-semibold cursor-pointer transition">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                            <span id="pdfFileNameLabel">Choose .PDF File from Device</span>
+                            <input type="file" id="pdfFileInput" accept="application/pdf,.pdf" class="hidden" onchange="handlePdfFileSelected(event)">
+                        </label>
+
+                        <span class="text-center text-[11px] text-slate-400 font-medium">OR</span>
+
+                        <!-- Option B: Direct GitHub PDF Path -->
+                        <input 
+                            type="text" 
+                            id="pdfUrlInput" 
+                            placeholder="Paste PDF path (e.g. ./guides/crm-manual.pdf)" 
+                            class="flex-1 px-3 py-2 text-xs bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-plum font-mono"
+                        >
+
+                        <button onclick="addNewPdfGuide()" class="px-5 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs shadow-xs transition">
+                            Add PDF Guide
+                        </button>
+                    </div>
+                </div>
+
+                <!-- PDF Guides List & Built-in Reader Split -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+                    <!-- Left Column: Available PDF Manuals -->
+                    <div class="lg:col-span-6 space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500">Available PDF Manuals (<span id="pdfTotalCount">4</span>)</h4>
+                            <select id="pdfFilterSelect" onchange="renderPdfGuidesList()" class="text-xs bg-slate-100 border-none rounded-lg px-2.5 py-1 text-slate-700">
+                                <option value="all">Show All Apps</option>
+                            </select>
+                        </div>
+                        <div id="pdfGuidesListContainer" class="space-y-2.5 max-h-[340px] overflow-y-auto pr-1">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Built-in PDF Document Previewer -->
+                    <div class="lg:col-span-6 flex flex-col bg-slate-800 rounded-2xl overflow-hidden border border-slate-700 min-h-[340px]">
+                        <div class="px-4 py-2.5 bg-slate-900 text-white flex items-center justify-between text-xs">
+                            <div class="flex items-center gap-2 truncate">
+                                <i class="fa-regular fa-file-pdf text-rose-400"></i>
+                                <span id="activePdfViewerTitle" class="font-medium truncate">NTURN Complete Platform Quickstart.pdf</span>
+                            </div>
+                            <button onclick="downloadCurrentlyViewedPdf()" class="px-2.5 py-1 rounded bg-rose-600 hover:bg-rose-500 text-white text-[11px] font-semibold flex items-center gap-1 shrink-0">
+                                <i class="fa-solid fa-download"></i>
+                                <span>Download .PDF</span>
+                            </button>
+                        </div>
+                        <div id="pdfPreviewViewport" class="flex-1 p-5 bg-slate-100 overflow-y-auto text-slate-800">
+                            <!-- Crisp PDF Page Simulation & Embedded Object Viewer -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL 3: CONNECT APPS (WORKFLOW BRIDGES) ==================== -->
+    <div id="connectAppsModal" class="hidden fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-2xl overflow-hidden flex flex-col max-h-[88vh]">
+            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-sky-50/50">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-sky-600 text-white flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-diagram-project"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-bold text-lg text-slate-800">Connect Apps & Workflow Bridges</h2>
+                        <p class="text-xs text-slate-500">Link your NTURN apps together so shared data flows automatically across modules</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('connectAppsModal')" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="p-6 overflow-y-auto space-y-5 flex-1">
+                <!-- Create New App Connection -->
+                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-600">Create New App-to-App Data Bridge</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-7 gap-2 items-center">
+                        <select id="connSourceSelect" class="sm:col-span-2 px-3 py-2 text-xs bg-white border border-slate-200 rounded-xl"></select>
+                        <div class="text-center text-slate-400 text-xs font-bold">
+                            <i class="fa-solid fa-arrow-right"></i> Syncs To
+                        </div>
+                        <select id="connTargetSelect" class="sm:col-span-2 px-3 py-2 text-xs bg-white border border-slate-200 rounded-xl"></select>
+                        <button onclick="createAppConnection()" class="sm:col-span-2 py-2 px-3 rounded-xl bg-plum hover:bg-plum-hover text-white font-semibold text-xs transition">
+                            + Connect Apps
+                        </button>
+                    </div>
+                    <input 
+                        type="text" 
+                        id="connRuleInput" 
+                        placeholder="Automation Rule (e.g. Send approved CRM deals directly to Invoicing ledger)" 
+                        class="w-full px-3 py-2 text-xs bg-white border border-slate-200 rounded-xl"
+                    >
+                </div>
+
+                <!-- Active Bridges List -->
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5">Configured App Connections</h4>
+                    <div id="connectionsListContainer" class="space-y-2.5">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL 4: CUSTOMIZE MODAL ==================== -->
+    <div id="customizeModal" class="hidden fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-2xl overflow-hidden flex flex-col max-h-[88vh]">
+            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-plum text-white flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-sliders"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-bold text-lg text-slate-800">Customize NTURN Projects</h2>
+                        <p class="text-xs text-slate-500">Pin favorite apps or toggle visibility across your 20-app launcher grid</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('customizeModal')" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="p-6 overflow-y-auto space-y-5 flex-1">
+                <div class="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+                    <div>
+                        <p class="text-xs font-semibold text-slate-800">Show Favorite Star Badges on Grid</p>
+                        <p class="text-[11px] text-slate-500">Highlight pinned & favorite apps (like Code Templates) on the main launcher</p>
+                    </div>
+                    <input type="checkbox" id="toggleStarBadges" checked onchange="toggleStarBadgesSetting(this.checked)" class="w-4 h-4 accent-plum rounded cursor-pointer">
+                </div>
+
+                <div>
+                    <div class="flex items-center justify-between mb-2.5">
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500">Manage All 20 Apps (Pin Favorites or Hide/Show)</h4>
+                        <button onclick="resetAllAppsVisibility()" class="text-xs text-plum font-semibold hover:underline">Show All 20 Apps</button>
+                    </div>
+                    <div id="customizeAppsList" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== NON-BLOCKING TOAST NOTIFICATION ==================== -->
+    <div id="toastContainer" class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- ==================== APPLICATION LOGIC & MULTI-COLORED ODOO SVG ICONS ==================== -->
+    <script>
+        /* =========================================================================
+           1. THE 20 APPS CATALOG WITH MULTI-COLORED GEOMETRIC SVG ICONS
+           ========================================================================= */
+        const DEFAULT_APPS = [
+            {
+                id: 'sheets',
+                name: 'Sheets',
+                category: 'productivity',
+                desc: 'Spreadsheets, automated formulas & financial tables',
+                route: './sheets/index.html',
+                pinned: true,
+                visible: true,
+                svg: `<svg class="w-11 h-11" viewBox="0 0 48 48" fill="none">
+                        <rect x="6" y="8" width="36" height="32" rx="6" fill="#10B981" fill-opacity="0.15"/>
+                        <path d="M6 16C6 11.5817 9.58172 8 14 8H34C38.4183 8 42 11.5817 42 16V18H6V16Z" fill="#10B981"/>
+                        <rect x="12" y="23" width="10" height="5" rx="1.5" fill="#059669"/>
+                        <rect x="26" y="23" width="10" height="5" rx="1.5" fill="#34D399"/>
+                        <rect x="12" y="31" width="10" height="5" rx="1.5" fill="#34D399"/>
+                        <rect x="26" y="31" width="10" height="5" rx="1.5" fill="#059669"/>
+                      </svg>`
+            },
+            {
+                id: 'docs',
+                name: 'Docs',
+                category: 'productivity',
+                desc: 'Clean rich-text documents, SOPs & collaborative writing',
+                route: './docs/index.html',
+                pinned: false,
+                visible: true,
+                svg: `<svg class="w-11 h-11" viewBox="0 0 48 48" fill="none">
+                        <rect x="10" y="6" width="24" height="34" rx="4" fill="#3B82F6"/>
+                        <rect x="16" y="10" width="24" height="34" rx="4" fill="#60A5FA" fill-opacity="0.85"/>
+                        <path d="M21 19H35M21 25H35M21 31H29" stroke="white" stroke-width="3" stroke-linecap="round"/>
+                      </svg>`
+            },
+            {
+                id: 'slides',
+                name: 'Slides',
+                category: 'productivity',
+                desc: 'Pitch decks, interactive storyboards & presentations',
+                route: './slides/index.html',
+                pinned: false,
+                visible: true,
+                svg: `<svg class="w-11 h-11" viewBox="0 0 48 48" fill="none">
+                        <rect x="6" y="9" width="36" height="26" rx="5" fill="#F59E0B"/>
+                        <circle cx="20" cy="22" r="6" fill="#FEF3C7"/>
+                        <path d="M29 17H36M29 22H36M29 27H33" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                        <path d="M18 41L24 35L30 41" stroke="#D97706" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>`
+            },
+            {
+                id: 'forms',
+                name: 'Forms',
+                category: 'productivity',
+                desc: 'Custom surveys, client onboarding & structured data capture',
+                route: './forms/index.html',
+                pinned: false,
+                visible: true,
+                svg: `<svg class="w-11 h-11" viewBox="0 0 48 48" fill="none">
+                        <rect x="9" y="6" width="30" height="36" rx="6" fill="#8B5CF6"/>
+                        <circle cx="17" cy="16" r="2.5" fill="#DDD6FE"/>
+                        <path d="M23 16H33" stroke="white" stroke-width="3" stroke-linecap="round"/>
+                        <circle cx="17" cy="24" r="2.5" fill="#FBBF24"/>
+                        <path d="M23 24H33" stroke="white" stroke-width="3" stroke-linecap="round"/>
+                        <rect x="15" y="31" width="18" height="5" rx="2.5" fill="#34D399"/>
+                      </svg>`
+            },
+            {
+                id: 'calendar',
+                name: 'Calendar',
+                category: 'productivity',
+                desc: 'Time-blocking, team appointments & milestone reminders',
+                route: './calendar/index.html',
+                pinned: false,
+                visible: true,
+                svg: `<svg class="w-11 h-11" viewBox="0 0 48 48" fill="none">
+                        <rect x="7" y="10" width="34" height="31" rx="6" fill="#FEE2E2"/>
+                        <path d="M7 16C7 12.6863 9.68629 10 13 10H35C38.3137 10 41 12.6863 41 16V19H7V16Z" fill="#EF4444"/>
+                        <path d="M16 7V12M32 7V12" stroke="#991B1B" stroke-width="3" stroke-linecap="round"/>
+                        <circle cx="17" cy="27" r="3" fill="#EF4444"/>
+                        <circle cx="24" cy="27" r="3" fill="#F59E0B"/>
+                        <circle cx="31" cy="27" r="3" fill="#10B981"/>
+                      </svg>`
+            },
+            {
+                id: 'notion',
+                name: 'Notion',
+                category: 'productivity',
+                desc: 'Modular knowledge base, connected wikis & nested blocks',
+                route: './notion/index.html',
+                pinned: true,
+                visible: true,
+                svg: `<svg class="w-11 h-11" viewBox="0 0 48 48" fill="none">
+                        <rect x="10" y="7" width="14" height="32" rx="3" fill="#14B8A6"/>
+                        <rect x="20" y="11" width="18" height="28" rx="3" fill="#6366F1" fill-opacity="0.9"/>
+                        <path d="M25 19H33M25 25H33M25 31H30" stroke="white" stroke-width="2.6" stroke-linecap="round"/>
+                      </svg>`
+            },
+            {
+                id: 'accounting',
+                name: 'Accounting',
+                category: 'business',
+                desc: 'Double-entry ledger, profit & loss statements & tax balance',
+                route: './accounting/index.html',
+                pinned: false,
+                visible: true,
+                svg: `<svg class="w-11 h-11" viewBox="0 0 48 48" fill="none">
+                        <path d="M12 36L36 12" stroke="#9333EA" stroke-width="5" stroke-linecap="round"/>
+                        <circle cx="15" cy="15" r="5.5" fill="#F59E0B"/>
+                        <circle cx="33" cy="33" r="5.5" fill="#10B981"/>
+                      </svg>`
+            },
+            {
+                id: 'sales',
+                name: 'Sales',
+                category: 'business',
+                desc: 'Quotations, sales orders & monthly revenue growth metrics',
+                route: './sales/index.html',
+                pinned: false,
+                visible: true,
+                svg: `<svg class="w-11 h-11" viewBox="0 0 48 48" fill="none">
+                        <rect x="8" y="28" width="7" height="12" rx="2" fill="#F43F5E"/>
+                        <rect x="18" y="21" width="7" height="19" rx="2" fill="#F59E0B"/>
+                        <rect x="28" y="13" width="7" height="27" rx="2" fill="#10B981"/>
+                        <path d="M10 20L21 12L34 8" stroke="#0EA5E9" stroke-width="3" stroke-linecap="round"/>
+                      </svg>`
+            },
+            {
+                id: 'crm',
+                name: 'CRM',
+                category: 'business',
+                desc: 'Customer pipeline, lead tracking & deal conversion stages',
+                route: './crm/index.html',
+                pinned: false,
+                visible: true,
+                svg: `<svg class="w-11 h-11" viewBox="0 0 48 48" fill="none">
+                        <path d="M8 18C8 13.5817 11.5817 10 16 10H32C36.4183 10 40 13.5817 40 18L28 34C25.8 36.8 22.2 36.8 20 34L8 18Z" fill="#14B8A6"/>
+                        <path d="M15 20L24 29L33 20" stroke="#7C3AED" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>`
+            },
+            {
+                id: 'invoicing',
+                name: 'Invoicing',
+                category: 'business',
+                desc: 'Professional GST/VAT client bills, payment status & receipts',
+                route: './invoicing/index.html',
+                pinned: false,
+                visible: true,
+                svg: `<svg class="w-11 h-11" viewBox="0 0 48 48" fill="none">
+                        <path d="M11 8H37V40L32 36L27 40L24 37L21 40L16 36L11 40V8Z" fill="#6366F1"/>
+                        <path d="M18 17H30M18 23H26" stroke="#E0E7FF" stroke-width="3" stroke-linecap="round"/>
+                        <circle cx="30" cy="28" r="4" fill="#FBBF24"/>
+                      </svg>`
+            },
+            {
+                id: 'expenses',
+                name: 'Expenses',
+                category: 'business',
+                desc: 'Receipt scanning, team reimbursements & burn-rate control',
+                route: './expenses/index.html',
+                pinned: false,
+                visible: true,
+                svg: `<svg class="w-11 h-11" viewBox="0 0 48 48" fill="none">
+                        <rect x="7" y="12" width="34" height="25" rx="6" fill="#EC4899"/>
+                        <path d="M28 20H41V29H28C25.5 29 24 27 24 24.5C24 22 25.5 20 28 20Z" fill="#FBBF24"/>
+                        <circle cx="29" cy="24.5" r="2" fill="#831843"/>
+                      </svg>`
+            },
+            {
+                id: 'inventory',
+                name: 'Inventory',
+                category: 'business',
+                desc: 'Real-time SKU stock levels, warehouses & barcode movements',
+                route: './inventory/index.html',
+                pinned: false,
+                visible: true,
+                svg: `<svg class="w-11 h-11" viewBox="0 0 48 48" fill="none">
+                        <path d="M24 7L40 15V33L24 41L8 33V15L24 7Z" fill="#F97316"/>
+                        <path d="M8 15L24 23L40 15" stroke="#FFEDD5" stroke-width="2.5"/>
+                        <path d="M24 23V41" stroke="#FFEDD5" stroke-width="2.5"/>
+                        <rect x="19" y="11" width="10" height="5" rx="1" fill="#14B8A6"/>
+                      </svg>`
+            },
+            {
+                id: 'employees',
+                name: 'Employees',
+                category: 'business',
+                desc: 'Team directory, attendance, leaves & department roles',
+                route: './employees/index.html',
+                pinned: false,
+                visible: true,
+                svg: `<svg class="w-11 h-11" viewBox="0 0 48 48" fill="none">
+                        <circle cx="19" cy="16" r="6" fill="#0EA5E9"/>
+                        <circle cx="31" cy="18" r="5" fill="#F59E0B"/>
+                        <path d="M9 36C9 30.5 13.5 26 19 26C24.5 26 29 30.5 29 36" fill="#0EA5E9"/>
+                        <path d="M24 36C24 31.5 27.5 28 32 28C36.5 28 40 31.5 40 36" fill="#10B981"/>
+                      </svg>`
+            },
+            {
+                id: 'purchase',
+                name: 'Purchase',
+                category: 'business',
+                desc: 'Supplier RFQs, purchase orders & vendor bill matching',
+                route: './purchase/index.html',
+                pinned: false,
+                visible: true,
+                svg: `<svg class="w-11 h-11" viewBox="0 0 48 48" fill="none">
+                        <path d="M12 16H36L34 38H14L12 16Z" fill="#7C3AED"/>
+                        <path d="M18 16V13C18 9.68629 20.6863 7 24 7C27.3137 7 30 9.68629 30 13V16" stroke="#F59E0B" stroke-width="3.2" stroke-linecap="round"/>
+                        <circle cx="20" cy="24" r="2" fill="white"/>
+                        <circle cx="28" cy="24" r="2" fill="white"/>
+                      </svg>`
+            },
+            {
+                id: 'manufacturing',
+                name: 'Manufacturing',
+                category: 'business',
+                desc: 'Bills of Materials (BOM), shop floor routing & assembly orders',
+                route: './manufacturing/index.html',
+                pinned: false,
+                visible: true,
+                svg: `<svg class="w-11 h-11" viewBox="0 0 48 48" fill="none">
+                        <path d="M11 37L37 11" stroke="#0EA5E9" stroke-width="5" stroke-linecap="round"/>
+                        <path d="M11 11L37 37" stroke="#6B4C68" stroke-width="5" stroke-linecap="round"/>
+                        <circle cx="24" cy="24" r="6" fill="#FBBF24"/>
+                      </svg>`
+            },
+            {
+                id: 'design',
+                name: 'Design',
+                category: 'creative',
+                desc: 'Canva-style drag-and-drop posters, social graphics & brand kits',
+                route: './design/index.html',
+                pinned: true,
+                visible: true,
+                svg: `<svg class="w-11 h-11" viewBox="0 0 48 48" fill="none">
+                        <circle cx="24" cy="24" r="16" fill="url(#designGrad)"/>
+                        <circle cx="19" cy="18" r="3" fill="white"/>
+                        <circle cx="29" cy="18" r="2.5" fill="#FEF08A"/>
+                        <circle cx="17" cy="27" r="2.5" fill="#A7F3D0"/>
+                        <path d="M26 28C29 28 31 31 28 34C25 36 22 33 23 30" fill="white"/>
+                        <defs>
+                            <linearGradient id="designGrad" x1="8" y1="8" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#EC4899"/>
+                                <stop offset="0.5" stop-color="#8B5CF6"/>
+                                <stop offset="1" stop-color="#06B6D4"/>
+                            </linearGradient>
+                        </defs>
+                      </svg>`
+            },
+            {
+                id: 'video-editor',
+                name: 'Video Editor',
+                category: 'creative',
+                desc: 'CapCut-style multi-track timeline cuts, captions & transitions',
+                route: './video-editor/index.html',
+                pinned: false,
+                visible: true,
+                svg: `<svg class="w-11 h-11" viewBox="0 0 48 48" fill="none">
+                        <rect x="6" y="11" width="26" height="26" rx="6" fill="#0EA5E9"/>
+                        <path d="M32 19L42 13V35L32 29V19Z" fill="#F43F5E"/>
+                        <path d="M16 19L24 24L16 29V19Z" fill="white"/>
+                      </svg>`
+            },
+            {
+                id: 'audio-edit',
+                name: 'Audio Edit',
+                category: 'creative',
+                desc: 'Multi-channel waveform studio, voice cleanup & podcast mastering',
+                route: './audio-edit/index.html',
+                pinned: false,
+                visible: true,
+                svg: `<svg class="w-11 h-11" viewBox="0 0 48 48" fill="none">
+                        <rect x="8" y="21" width="4" height="8" rx="2" fill="#8B5CF6"/>
+                        <rect x="15" y="13" width="4" height="22" rx="2" fill="#EC4899"/>
+                        <rect x="22" y="8" width="4" height="32" rx="2" fill="#F59E0B"/>
+                        <rect x="29" y="15" width="4" height="18" rx="2" fill="#10B981"/>
+                        <rect x="36" y="19" width="4" height="10" rx="2" fill="#0EA5E9"/>
+                      </svg>`
+            },
+            {
+                id: 'code-templates',
+                name: 'Code Templates',
+                category: 'creative',
+                desc: 'Ready-to-use HTML, CSS, Tailwind & JS boilerplates for rapid building',
+                route: './code-templates/index.html',
+                pinned: true,
+                visible: true,
+                isFav: true,
+                svg: `<svg class="w-11 h-11" viewBox="0 0 48 48" fill="none">
+                        <rect x="6" y="9" width="36" height="30" rx="6" fill="#1E293B"/>
+                        <path d="M18 19L12 24L18 29" stroke="#38BDF8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M30 19L36 24L30 29" stroke="#FBBF24" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M26 17L22 31" stroke="#F43F5E" stroke-width="2.8" stroke-linecap="round"/>
+                      </svg>`
+            },
+            {
+                id: 'projects',
+                name: 'Projects',
+                category: 'productivity',
+                desc: 'Agile Kanban boards, sprint checklists & milestone tracking',
+                route: './projects/index.html',
+                pinned: false,
+                visible: true,
+                svg: `<svg class="w-11 h-11" viewBox="0 0 48 48" fill="none">
+                        <path d="M12 25L20 33L37 15" stroke="#10B981" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M12 25L20 33" stroke="#6B4C68" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>`
+            }
+        ];
+
+        /* =========================================================================
+           2. PRE-LOADED CODE TEMPLATES (FOR THE USER'S FAVORITE APP)
+           ========================================================================= */
+        const DEFAULT_CODE_TEMPLATES = [
+            {
+                id: 'tpl-1',
+                title: 'NTURN Projects Sub-App Starter Layout (HTML + Tailwind)',
+                lang: 'HTML5',
+                desc: 'Use this starter template for any of your 20 NTURN Projects apps so it shares the same header, back button, and auto-backup hook.',
+                code: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NTURN Projects Module</title>
+  <script src="https://cdn.tailwindcss.com"><\/script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+  <header class="bg-white border-b px-6 py-3 flex items-center justify-between">
+    <a href="../index.html" class="font-bold text-slate-700 hover:text-purple-800">← Back to NTURN Projects</a>
+    <span class="text-xs bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full">All data saved locally</span>
+  </header>
+  <main class="max-w-6xl mx-auto p-6">
+    <h1 class="text-2xl font-bold mb-4">Module Workspace</h1>
+  </main>
+</body>
+</html>`
+            },
+            {
+                id: 'tpl-2',
+                title: 'LocalStorage Auto-Save & JSON Backup Engine',
+                lang: 'JavaScript',
+                desc: 'Drop-in JavaScript helper to save user data automatically in browser LocalStorage and export/import as a JSON file.',
+                code: `const NturnStorage = {
+  save(appKey, data) {
+    localStorage.setItem('nturn_' + appKey, JSON.stringify({
+      updatedAt: new Date().toISOString(),
+      payload: data
+    }));
+  },
+  load(appKey, fallback = []) {
+    const raw = localStorage.getItem('nturn_' + appKey);
+    return raw ? JSON.parse(raw).payload : fallback;
+  }
+};`
+            },
+            {
+                id: 'tpl-3',
+                title: 'Minimalist Google/Microsoft Clean Data Table',
+                lang: 'Tailwind UI',
+                desc: 'Responsive, ultra-clean table component for Sheets, Accounting, CRM, and Inventory modules.',
+                code: `<div class="overflow-x-auto bg-white rounded-xl border border-slate-200 shadow-2xs">
+  <table class="w-full text-left text-sm">
+    <thead class="bg-slate-50 border-b border-slate-200 text-xs uppercase text-slate-500">
+      <tr>
+        <th class="px-4 py-3">Item / Record</th>
+        <th class="px-4 py-3">Status</th>
+        <th class="px-4 py-3 text-right">Amount</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      <tr class="hover:bg-slate-50">
+        <td class="px-4 py-3 font-medium">Enterprise Deal #104</td>
+        <td class="px-4 py-3"><span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-full text-xs">Active</span></td>
+        <td class="px-4 py-3 text-right font-mono">$1,250.00</td>
+      </tr>
+    </tbody>
+  </table>
+</div>`
+            }
+        ];
+
+        /* =========================================================================
+           3. PRE-LOADED OFFICIAL PDF GUIDES (PDF-ONLY LIBRARY)
+           ========================================================================= */
+        const DEFAULT_PDF_GUIDES = [
+            {
+                id: 'pdf-1',
+                title: 'NTURN Complete Platform Quickstart.pdf',
+                appTag: 'All Platform',
+                pages: 4,
+                size: '142 KB',
+                desc: 'Complete architecture guide explaining how the 20 NTURN apps connect on GitHub Pages and how local backups protect user data.',
+                sections: [
+                    { heading: '1. Welcome to NTURN Projects', body: 'NTURN Projects unifies 20 essential productivity, finance, ERP, and creative studio tools under a single minimalist launcher.' },
+                    { heading: '2. Hosting on GitHub Pages', body: 'Each app card routes cleanly to its own subfolder (e.g. ./sheets/index.html) or runs inside the unified local storage workspace.' },
+                    { heading: '3. Zero Data Loss Guarantee', body: 'Use the top-right Export Backup button anytime to save a portable .json snapshot of all 20 apps to your computer or phone.' }
+                ]
+            },
+            {
+                id: 'pdf-2',
+                title: 'Data Backup & Export Security Guide.pdf',
+                appTag: 'All Platform',
+                pages: 3,
+                size: '98 KB',
+                desc: 'Step-by-step instructions on exporting .JSON backups, restoring workspaces across devices, and browser storage best practices.',
+                sections: [
+                    { heading: '1. How Automatic Browser Saving Works', body: 'Every note, code snippet, workflow bridge, and app customization is immediately written to your browser localStorage.' },
+                    { heading: '2. Exporting & Importing JSON Files', body: 'Click "Export Backup" in the top-right header to download your master backup file. Use "Import Backup" on any device to restore.' }
+                ]
+            },
+            {
+                id: 'pdf-3',
+                title: 'CRM, Sales & Invoicing Automation Manual.pdf',
+                appTag: 'CRM',
+                pages: 5,
+                size: '210 KB',
+                desc: 'Learn how to link CRM leads to Sales quotations and automatically generate client invoices & accounting entries.',
+                sections: [
+                    { heading: '1. Connecting CRM to Invoicing', body: 'Open the "Connect Apps" modal in the top-left header and enable the CRM -> Invoicing bridge.' },
+                    { heading: '2. Managing Pipeline Deals', body: 'Track prospect stages inside CRM and push won deals directly to your Invoicing and Accounting modules.' }
+                ]
+            },
+            {
+                id: 'pdf-4',
+                title: 'Code Templates & Developer Boilerplate Guide.pdf',
+                appTag: 'Code Templates',
+                pages: 6,
+                size: '185 KB',
+                desc: 'Official reference for building and extending all 20 NTURN apps with clean Google/Microsoft minimalist UI components.',
+                sections: [
+                    { heading: '1. Using the Built-In Code Templates App', body: 'Click the starred "Code Templates" icon on the home grid to copy ready-made HTML, Tailwind CSS, and LocalStorage snippets.' },
+                    { heading: '2. Adding Custom Snippets', body: 'Save your own reusable UI components directly inside the Code Templates studio.' }
+                ]
+            }
+        ];
+
+        /* =========================================================================
+           4. DEFAULT APP CONNECTIONS (WORKFLOW BRIDGES)
+           ========================================================================= */
+        const DEFAULT_CONNECTIONS = [
+            { id: 'c1', source: 'CRM', target: 'Invoicing', rule: 'Auto-create draft invoice when CRM lead is marked Won', active: true },
+            { id: 'c2', source: 'Sales', target: 'Accounting', rule: 'Sync completed sales orders to Accounting general ledger', active: true },
+            { id: 'c3', source: 'Sheets', target: 'Docs', rule: 'Allow embedding live spreadsheet summary tables inside Docs', active: true },
+            { id: 'c4', source: 'Code Templates', target: 'Projects', rule: 'Attach boilerplate code templates directly to Project tasks', active: true }
+        ];
+
+        /* =========================================================================
+           5. STATE MANAGEMENT & LOCALSTORAGE PERSISTENCE
+           ========================================================================= */
+        const STORAGE_KEY = 'nturn_projects_master_v1';
+
+        let appState = {
+            apps: [],
+            connections: [],
+            pdfGuides: [],
+            codeTemplates: [],
+            appRecords: {}, // Stores per-app quick notes/records keyed by app.id
+            feedbackLog: [
+                {
+                    id: 'fb-init',
+                    type: 'Feature Idea',
+                    app: 'Code Templates',
+                    priority: 'High',
+                    message: 'Add one-click copy for starter HTML templates so all 20 apps stay consistent.',
+                    date: 'Today',
+                    status: 'Active'
+                }
+            ],
+            settings: {
+                showStarBadges: true
+            }
+        };
+
+        let currentCategoryFilter = 'all';
+        let currentActiveAppId = null;
+        let currentFeedbackType = 'Bug Report';
+        let currentViewedPdfId = 'pdf-1';
+        let pendingUploadedPdfDataUrl = null;
+        let pendingUploadedPdfFileName = '';
+
+        // Load state from localStorage or initialize defaults
+        function loadStateFromStorage() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    // Merge saved state with default SVG definitions
+                    appState.apps = DEFAULT_APPS.map(defApp => {
+                        const savedApp = (parsed.apps || []).find(a => a.id === defApp.id);
+                        return savedApp ? { ...defApp, ...savedApp, svg: defApp.svg } : defApp;
+                    });
+                    appState.connections = parsed.connections || DEFAULT_CONNECTIONS;
+                    appState.pdfGuides = parsed.pdfGuides || DEFAULT_PDF_GUIDES;
+                    appState.codeTemplates = parsed.codeTemplates || DEFAULT_CODE_TEMPLATES;
+                    appState.appRecords = parsed.appRecords || {};
+                    appState.feedbackLog = parsed.feedbackLog || appState.feedbackLog;
+                    appState.settings = { ...appState.settings, ...(parsed.settings || {}) };
+                } else {
+                    appState.apps = [...DEFAULT_APPS];
+                    appState.connections = [...DEFAULT_CONNECTIONS];
+                    appState.pdfGuides = [...DEFAULT_PDF_GUIDES];
+                    appState.codeTemplates = [...DEFAULT_CODE_TEMPLATES];
+                    saveStateToStorage(false);
+                }
+            } catch (e) {
+                console.error('Error loading NTURN state:', e);
+                appState.apps = [...DEFAULT_APPS];
+                appState.connections = [...DEFAULT_CONNECTIONS];
+                appState.pdfGuides = [...DEFAULT_PDF_GUIDES];
+                appState.codeTemplates = [...DEFAULT_CODE_TEMPLATES];
+            }
+            updateHeaderIndicators();
+        }
+
+        function saveStateToStorage(showNotification = false) {
+            try {
+                // Strip inline SVG strings when saving to keep storage lightweight
+                const serializableApps = appState.apps.map(({ svg, ...rest }) => rest);
+                const payload = {
+                    ...appState,
+                    apps: serializableApps,
+                    lastSaved: new Date().toISOString()
+                };
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+                updateHeaderIndicators();
+                if (showNotification) {
+                    showToast('Saved automatically to browser storage', 'success');
+                }
+            } catch (err) {
+                showToast('Storage limit reached. Please export a backup file.', 'error');
+            }
+        }
+
+        function updateHeaderIndicators() {
+            const activeConns = appState.connections.filter(c => c.active).length;
+            const badge = document.getElementById('activeConnectionsBadge');
+            if (badge) badge.textContent = activeConns;
+
+            const fbBadge = document.getElementById('feedbackCountBadge');
+            if (fbBadge) fbBadge.textContent = appState.feedbackLog.length;
+
+            const recordCount = Object.values(appState.appRecords).reduce((acc, list) => acc + (list ? list.length : 0), 0);
+            const statusText = document.getElementById('storageStatusText');
+            if (statusText) {
+                statusText.textContent = recordCount > 0
+                    ? `All data saved locally (${appState.codeTemplates.length + recordCount} items)`
+                    : 'All data saved locally';
+            }
+        }
+
+        /* =========================================================================
+           6. RENDER THE 20 APPS ODOO-STYLE SQUIRCLE GRID
+           ========================================================================= */
+        function renderAppsGrid() {
+            const container = document.getElementById('appsGridContainer');
+            const emptyState = document.getElementById('emptyAppsState');
+            const searchQuery = (document.getElementById('appSearchInput')?.value || '').trim().toLowerCase();
+
+            const filtered = appState.apps.filter(app => {
+                if (!app.visible) return false;
+                if (currentCategoryFilter === 'pinned' && !app.pinned) return false;
+                if (currentCategoryFilter !== 'all' && currentCategoryFilter !== 'pinned' && app.category !== currentCategoryFilter) {
+                    return false;
+                }
+                if (searchQuery && !app.name.toLowerCase().includes(searchQuery) && !app.desc.toLowerCase().includes(searchQuery)) {
+                    return false;
+                }
+                return true;
+            });
+
+            container.innerHTML = '';
+
+            if (filtered.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            emptyState.classList.add('hidden');
+
+            filtered.forEach(app => {
+                const item = document.createElement('div');
+                item.className = 'nturn-app-item group';
+                item.onclick = () => openAppWorkspace(app.id);
+
+                // Optional Star / FAV badge
+                let badgeHtml = '';
+                if (appState.settings.showStarBadges && (app.isFav || app.pinned)) {
+                    badgeHtml = `
+                        <span class="absolute -top-1.5 -right-1.5 px-1.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider shadow-2xs ${app.isFav ? 'bg-amber-400 text-slate-900' : 'bg-slate-800 text-amber-300'}">
+                            ${app.isFav ? '★ FAV' : '★'}
+                        </span>
+                    `;
+                }
+
+                item.innerHTML = `
+                    <div class="nturn-squircle">
+                        ${badgeHtml}
+                        ${app.svg}
+                    </div>
+                    <span class="mt-2.5 text-[13.5px] font-medium text-slate-700 group-hover:text-slate-950 tracking-tight leading-snug">
+                        ${app.name}
+                    </span>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function filterAppsByCategory(cat) {
+            currentCategoryFilter = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                if (btn.dataset.cat === cat) {
+                    btn.className = 'cat-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-plum text-white transition';
+                } else {
+                    btn.className = 'cat-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-medium text-slate-600 hover:bg-slate-100 transition';
+                }
+            });
+            renderAppsGrid();
+        }
+
+        function resetFilter() {
+            const searchInput = document.getElementById('appSearchInput');
+            if (searchInput) searchInput.value = '';
+            filterAppsByCategory('all');
+        }
+
+        function scrollToApps() {
+            document.getElementById('appsSection')?.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        /* =========================================================================
+           7. APP WORKSPACE & INTERACTIVE CODE TEMPLATES STUDIO
+           ========================================================================= */
+        function openAppWorkspace(appId) {
+            const app = appState.apps.find(a => a.id === appId);
+            if (!app) return;
+            currentActiveAppId = appId;
+
+            document.getElementById('modalAppIconBox').innerHTML = app.svg;
+            document.getElementById('modalAppName').textContent = app.name;
+            document.getElementById('modalAppCategoryBadge').textContent = app.category.toUpperCase();
+            document.getElementById('modalAppDesc').textContent = app.desc;
+            document.getElementById('modalAppRouteInput').value = app.route || `./${app.id}/index.html`;
+
+            // Show active connected bridges for this app
+            const relatedBridges = appState.connections.filter(
+                c => c.active && (c.source.toLowerCase() === app.name.toLowerCase() || c.target.toLowerCase() === app.name.toLowerCase())
+            );
+            const connEl = document.getElementById('modalConnectedAppsList');
+            if (relatedBridges.length > 0) {
+                connEl.innerHTML = relatedBridges.map(b => `<span class="inline-block bg-white px-2 py-0.5 rounded border border-sky-200 mr-1">${b.source} → ${b.target}</span>`).join('');
+            } else {
+                connEl.textContent = 'No active bridges linked yet';
+            }
+
+            const workspaceEl = document.getElementById('modalDynamicWorkspace');
+
+            // Special Rich View if this is "Code Templates" (User's Favorite App!)
+            if (app.id === 'code-templates') {
+                renderCodeTemplatesStudio(workspaceEl);
+            } else {
+                renderStandardAppQuickWorkspace(workspaceEl, app);
+            }
+
+            openModal('appWorkspaceModal');
+        }
+
+        function renderCodeTemplatesStudio(container) {
+            container.innerHTML = `
+                <div class="space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-100">
+                        <div>
+                            <h3 class="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                                <i class="fa-solid fa-star text-amber-400"></i>
+                                <span>Favorite App: Ready-to-Use Code Templates Library</span>
+                            </h3>
+                            <p class="text-xs text-slate-500">Copy starter boilerplates for your 20 NTURN apps or save your own reusable snippets</p>
+                        </div>
+                        <button onclick="toggleNewTemplateForm()" class="px-3 py-1.5 rounded-lg bg-slate-900 text-white text-xs font-semibold hover:bg-slate-700 transition self-start">
+                            + Add Code Snippet
+                        </button>
+                    </div>
+
+                    <!-- Hidden Add New Template Form -->
+                    <div id="newTemplateFormBox" class="hidden p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2.5">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                            <input type="text" id="newTplTitle" placeholder="Snippet Title (e.g. Kanban Card UI)" class="sm:col-span-2 px-3 py-1.5 text-xs bg-white border border-slate-200 rounded-lg">
+                            <input type="text" id="newTplLang" placeholder="Language (HTML / JS / CSS)" class="px-3 py-1.5 text-xs bg-white border border-slate-200 rounded-lg">
+                        </div>
+                        <input type="text" id="newTplDesc" placeholder="Short description of what this template does..." class="w-full px-3 py-1.5 text-xs bg-white border border-slate-200 rounded-lg">
+                        <textarea id="newTplCode" rows="4" placeholder="Paste your HTML, CSS, or JS template code here..." class="w-full p-2.5 text-xs font-mono bg-slate-900 text-emerald-300 rounded-lg"></textarea>
+                        <div class="flex justify-end gap-2">
+                            <button onclick="toggleNewTemplateForm()" class="px-3 py-1 rounded-lg text-xs text-slate-600 hover:bg-slate-200">Cancel</button>
+                            <button onclick="saveNewCodeTemplate()" class="px-4 py-1.5 rounded-lg bg-plum text-white text-xs font-semibold">Save Template</button>
+                        </div>
+                    </div>
+
+                    <!-- Templates List -->
+                    <div class="space-y-3">
+                        ${appState.codeTemplates.map((tpl, idx) => `
+                            <div class="rounded-xl border border-slate-200 overflow-hidden bg-white shadow-2xs">
+                                <div class="px-4 py-2.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between gap-2">
+                                    <div class="flex items-center gap-2">
+                                        <span class="px-2 py-0.5 rounded bg-slate-800 text-amber-300 font-mono text-[10px] font-semibold">${escapeHtml(tpl.lang)}</span>
+                                        <h4 class="font-semibold text-xs sm:text-sm text-slate-800">${escapeHtml(tpl.title)}</h4>
+                                    </div>
+                                    <div class="flex items-center gap-1.5">
+                                        <button onclick="copyTemplateCode(${idx})" class="px-2.5 py-1 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs font-medium flex items-center gap-1 transition">
+                                            <i class="fa-regular fa-copy text-plum"></i>
+                                            <span>Copy</span>
+                                        </button>
+                                        <button onclick="downloadTemplateFile(${idx})" class="px-2.5 py-1 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs font-medium flex items-center gap-1 transition" title="Download Snippet File">
+                                            <i class="fa-solid fa-download text-emerald-600"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="p-3">
+                                    <p class="text-xs text-slate-500 mb-2">${escapeHtml(tpl.desc)}</p>
+                                    <pre class="p-3 rounded-lg bg-slate-900 text-slate-100 font-mono text-[11px] overflow-x-auto max-h-40"><code>${escapeHtml(tpl.code)}</code></pre>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function toggleNewTemplateForm() {
+            const box = document.getElementById('newTemplateFormBox');
+            if (box) box.classList.toggle('hidden');
+        }
+
+        function saveNewCodeTemplate() {
+            const title = document.getElementById('newTplTitle').value.trim();
+            const lang = document.getElementById('newTplLang').value.trim() || 'HTML/JS';
+            const desc = document.getElementById('newTplDesc').value.trim() || 'Custom user template';
+            const code = document.getElementById('newTplCode').value;
+
+            if (!title || !code.trim()) {
+                showToast('Please enter both a template title and code snippet', 'error');
+                return;
+            }
+
+            appState.codeTemplates.unshift({
+                id: 'tpl-' + Date.now(),
+                title,
+                lang,
+                desc,
+                code
+            });
+            saveStateToStorage(true);
+            renderCodeTemplatesStudio(document.getElementById('modalDynamicWorkspace'));
+        }
+
+        function copyTemplateCode(index) {
+            const tpl = appState.codeTemplates[index];
+            if (!tpl) return;
+            copyTextToClipboard(tpl.code);
+            showToast(`Copied "${tpl.title}" to clipboard!`, 'success');
+        }
+
+        function downloadTemplateFile(index) {
+            const tpl = appState.codeTemplates[index];
+            if (!tpl) return;
+            const ext = tpl.lang.toLowerCase().includes('js') || tpl.lang.toLowerCase().includes('javascript') ? 'js' : 'html';
+            const blob = new Blob([tpl.code], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${tpl.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.${ext}`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast(`Downloaded "${tpl.title}"`, 'success');
+        }
+
+        // Standard Quick Scratchpad & Local Records Table for any of the other 19 apps
+        function renderStandardAppQuickWorkspace(container, app) {
+            const records = appState.appRecords[app.id] || [];
+            container.innerHTML = `
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-sm font-bold text-slate-800">${app.name} — Quick Records & Scratchpad</h3>
+                            <p class="text-xs text-slate-500">Save entries, tasks, or data notes directly inside ${app.name} (backed up in your master JSON file)</p>
+                        </div>
+                        <span class="text-xs font-semibold text-slate-500">${records.length} Saved Entries</span>
+                    </div>
+
+                    <!-- Add Quick Entry Bar -->
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <input 
+                            type="text" 
+                            id="quickRecordTitleInput" 
+                            placeholder="Add a quick item, note, or record for ${app.name}..." 
+                            class="flex-1 px-3.5 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:bg-white focus:border-plum"
+                        >
+                        <input 
+                            type="text" 
+                            id="quickRecordValueInput" 
+                            placeholder="Status / Amount / Tag (optional)" 
+                            class="sm:w-48 px-3.5 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:bg-white focus:border-plum"
+                        >
+                        <button onclick="addQuickAppRecord('${app.id}')" class="px-4 py-2 rounded-xl bg-plum hover:bg-plum-hover text-white font-semibold text-xs shrink-0 transition">
+                            + Save Entry
+                        </button>
+                    </div>
+
+                    <!-- Records Table -->
+                    <div class="rounded-xl border border-slate-200 overflow-hidden">
+                        ${records.length === 0 ? `
+                            <div class="p-8 text-center bg-slate-50/50 text-xs text-slate-400">
+                                No local entries saved in ${app.name} yet. Add one above to test instant LocalStorage backup!
+                            </div>
+                        ` : `
+                            <table class="w-full text-left text-xs">
+                                <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase">
+                                    <tr>
+                                        <th class="px-4 py-2.5">Record / Note</th>
+                                        <th class="px-4 py-2.5">Tag / Value</th>
+                                        <th class="px-4 py-2.5">Saved</th>
+                                        <th class="px-4 py-2.5 text-right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100">
+                                    ${records.map((rec, idx) => `
+                                        <tr class="hover:bg-slate-50">
+                                            <td class="px-4 py-2.5 font-medium text-slate-800">${escapeHtml(rec.title)}</td>
+                                            <td class="px-4 py-2.5"><span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">${escapeHtml(rec.value || 'General')}</span></td>
+                                            <td class="px-4 py-2.5 text-slate-400">${escapeHtml(rec.date)}</td>
+                                            <td class="px-4 py-2.5 text-right">
+                                                <button onclick="deleteQuickAppRecord('${app.id}', ${idx})" class="text-rose-500 hover:text-rose-700">
+                                                    <i class="fa-regular fa-trash-can"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        `}
+                    </div>
+                </div>
+            `;
+        }
+
+        function addQuickAppRecord(appId) {
+            const titleEl = document.getElementById('quickRecordTitleInput');
+            const valEl = document.getElementById('quickRecordValueInput');
+            const title = titleEl.value.trim();
+            if (!title) {
+                showToast('Please enter a record title or note first', 'error');
+                return;
+            }
+            if (!appState.appRecords[appId]) appState.appRecords[appId] = [];
+            appState.appRecords[appId].unshift({
+                title,
+                value: valEl.value.trim() || 'Active',
+                date: new Date().toLocaleDateString()
+            });
+            saveStateToStorage(true);
+            const app = appState.apps.find(a => a.id === appId);
+            renderStandardAppQuickWorkspace(document.getElementById('modalDynamicWorkspace'), app);
+        }
+
+        function deleteQuickAppRecord(appId, idx) {
+            if (!appState.appRecords[appId]) return;
+            appState.appRecords[appId].splice(idx, 1);
+            saveStateToStorage(true);
+            const app = appState.apps.find(a => a.id === appId);
+            renderStandardAppQuickWorkspace(document.getElementById('modalDynamicWorkspace'), app);
+        }
+
+        function saveCurrentAppRoute() {
+            if (!currentActiveAppId) return;
+            const newRoute = document.getElementById('modalAppRouteInput').value.trim();
+            const app = appState.apps.find(a => a.id === currentActiveAppId);
+            if (app && newRoute) {
+                app.route = newRoute;
+                saveStateToStorage(true);
+            }
+        }
+
+        function launchExternalAppRoute() {
+            if (!currentActiveAppId) return;
+            const app = appState.apps.find(a => a.id === currentActiveAppId);
+            const route = document.getElementById('modalAppRouteInput').value.trim() || app.route;
+            showToast(`Configured route "${route}" ready for GitHub Pages deployment!`, 'info');
+        }
+
+        /* =========================================================================
+           8. PDF-ONLY GUIDES & TUTORIALS MANAGER + REAL PDF FILE GENERATOR
+           ========================================================================= */
+        function renderPdfGuidesList() {
+            const listEl = document.getElementById('pdfGuidesListContainer');
+            const filterVal = document.getElementById('pdfFilterSelect')?.value || 'all';
+            const filtered = appState.pdfGuides.filter(g => filterVal === 'all' || g.appTag === filterVal);
+
+            document.getElementById('pdfTotalCount').textContent = filtered.length;
+            listEl.innerHTML = '';
+
+            filtered.forEach(pdf => {
+                const isSelected = pdf.id === currentViewedPdfId;
+                const card = document.createElement('div');
+                card.className = `p-3.5 rounded-xl border transition cursor-pointer ${isSelected ? 'bg-rose-50/70 border-rose-300 shadow-2xs' : 'bg-white border-slate-200 hover:border-slate-300'}`;
+                card.onclick = () => previewPdfGuide(pdf.id);
+
+                card.innerHTML = `
+                    <div class="flex items-start justify-between gap-2">
+                        <div class="flex items-start gap-2.5">
+                            <div class="w-9 h-9 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">
+                                PDF
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-xs sm:text-sm text-slate-800 leading-snug">${escapeHtml(pdf.title)}</h4>
+                                <div class="flex items-center gap-2 mt-1 text-[11px] text-slate-500">
+                                    <span class="px-2 py-0.2 rounded bg-slate-100 text-slate-700 font-medium">${escapeHtml(pdf.appTag)}</span>
+                                    <span>• ${escapeHtml(pdf.size || '120 KB')}</span>
+                                </div>
+                                <p class="text-xs text-slate-500 mt-1.5 line-clamp-2">${escapeHtml(pdf.desc)}</p>
+                            </div>
+                        </div>
+                        <button onclick="event.stopPropagation(); downloadSinglePdf('${pdf.id}')" class="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition" title="Download .PDF">
+                            <i class="fa-solid fa-download"></i>
+                        </button>
+                    </div>
+                `;
+                listEl.appendChild(card);
+            });
+
+            previewPdfGuide(currentViewedPdfId);
+        }
+
+        function previewPdfGuide(pdfId) {
+            const pdf = appState.pdfGuides.find(p => p.id === pdfId) || appState.pdfGuides[0];
+            if (!pdf) return;
+            currentViewedPdfId = pdf.id;
+
+            document.getElementById('activePdfViewerTitle').textContent = pdf.title;
+            const viewport = document.getElementById('pdfPreviewViewport');
+
+            // If user uploaded a local PDF blob/dataURL or external PDF link
+            if (pdf.dataUrl) {
+                viewport.innerHTML = `
+                    <iframe src="${pdf.dataUrl}" class="w-full h-[310px] rounded-lg border border-slate-300 bg-white" title="${escapeHtml(pdf.title)}"></iframe>
+                `;
+                return;
+            }
+
+            // Render crisp structured PDF page preview
+            const sectionsHtml = (pdf.sections || [
+                { heading: '1. Overview & Setup', body: pdf.desc },
+                { heading: '2. GitHub Pages Workflow', body: 'Place this PDF inside your repository /guides folder or access it anytime via the NTURN PDF Library.' }
+            ]).map(s => `
+                <div class="mb-4">
+                    <h5 class="font-bold text-xs uppercase tracking-wider text-plum mb-1">${escapeHtml(s.heading)}</h5>
+                    <p class="text-xs text-slate-600 leading-relaxed">${escapeHtml(s.body)}</p>
+                </div>
+            `).join('');
+
+            viewport.innerHTML = `
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 max-w-lg mx-auto">
+                    <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
+                        <div>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-rose-600">OFFICIAL NTURN PDF MANUAL</span>
+                            <h3 class="font-bold text-base text-slate-900 mt-0.5">${escapeHtml(pdf.title)}</h3>
+                        </div>
+                        <span class="px-2.5 py-1 rounded bg-slate-100 text-slate-600 font-mono text-[11px]">${escapeHtml(pdf.appTag)}</span>
+                    </div>
+                    ${sectionsHtml}
+                    <div class="mt-6 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+                        <span>NTURN Projects Documentation</span>
+                        <span>Format: Standard PDF 1.4</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function handlePdfFileSelected(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            if (!file.name.toLowerCase().endsWith('.pdf')) {
+                showToast('Only .pdf files are allowed in the PDF Guide Library', 'error');
+                event.target.value = '';
+                return;
+            }
+            pendingUploadedPdfFileName = file.name;
+            document.getElementById('pdfFileNameLabel').textContent = file.name;
+            if (!document.getElementById('pdfTitleInput').value) {
+                document.getElementById('pdfTitleInput').value = file.name;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                pendingUploadedPdfDataUrl = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function addNewPdfGuide() {
+            let title = document.getElementById('pdfTitleInput').value.trim();
+            const appTag = document.getElementById('pdfAppTagInput').value;
+            const desc = document.getElementById('pdfDescInput').value.trim() || 'Custom uploaded PDF guide for NTURN Projects.';
+            const urlPath = document.getElementById('pdfUrlInput').value.trim();
+
+            if (!title && pendingUploadedPdfFileName) {
+                title = pendingUploadedPdfFileName;
+            }
+            if (!title) {
+                showToast('Please provide a title for the PDF guide', 'error');
+                return;
+            }
+            if (!title.toLowerCase().endsWith('.pdf')) {
+                title += '.pdf';
+            }
+
+            const newGuide = {
+                id: 'pdf-' + Date.now(),
+                title,
+                appTag,
+                size: pendingUploadedPdfDataUrl ? 'Local PDF' : 'Linked PDF',
+                desc: urlPath ? `${desc} (Path: ${urlPath})` : desc,
+                dataUrl: pendingUploadedPdfDataUrl || null,
+                externalUrl: urlPath || null
+            };
+
+            appState.pdfGuides.unshift(newGuide);
+            currentViewedPdfId = newGuide.id;
+
+            // Reset inputs
+            document.getElementById('pdfTitleInput').value = '';
+            document.getElementById('pdfDescInput').value = '';
+            document.getElementById('pdfUrlInput').value = '';
+            document.getElementById('pdfFileNameLabel').textContent = 'Choose .PDF File from Device';
+            pendingUploadedPdfDataUrl = null;
+            pendingUploadedPdfFileName = '';
+
+            saveStateToStorage(true);
+            renderPdfGuidesList();
+            showToast(`Added "${title}" to PDF Guides!`, 'success');
+        }
+
+        // Generates a genuine, valid PDF 1.4 binary file on the fly so users can download & open any guide in Adobe Reader / Chrome PDF Viewer
+        function generateValidPdfBlob(pdfDoc) {
+            const cleanTitle = (pdfDoc.title || 'NTURN Guide').replace(/[()\\]/g, '');
+            const cleanApp = (pdfDoc.appTag || 'General').replace(/[()\\]/g, '');
+            const cleanDesc = (pdfDoc.desc || '').replace(/[()\\]/g, '').slice(0, 95);
+
+            const contentStream = [
+                'BT',
+                '/F1 18 Tf',
+                '50 750 Td',
+                `(${cleanTitle}) Tj`,
+                '/F1 11 Tf',
+                '0 -28 Td',
+                `(App Module: ${cleanApp} | NTURN Projects Official PDF Manual) Tj`,
+                '0 -24 Td',
+                `(${cleanDesc}) Tj`,
+                '0 -32 Td',
+                '(------------------------------------------------------------------------) Tj',
+                '0 -24 Td',
+                '(1. All data in NTURN Projects is automatically backed up in LocalStorage.) Tj',
+                '0 -20 Td',
+                '(2. Use Export Backup in the top-right header to download your .JSON file.) Tj',
+                '0 -20 Td',
+                '(3. Host each of the 20 apps cleanly on GitHub Pages.) Tj',
+                'ET'
+            ].join('\n');
+
+            const pdfLines = [
+                '%PDF-1.4',
+                '1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj',
+                '2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj',
+                '3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >> endobj',
+                `4 0 obj << /Length ${contentStream.length} >> stream\n${contentStream}\nendstream endobj`,
+                '5 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj',
+                'xref',
+                '0 6',
+                '0000000000 65535 f ',
+                '0000000009 00000 n ',
+                '0000000058 00000 n ',
+                '0000000115 00000 n ',
+                '0000000241 00000 n ',
+                '0000000550 00000 n ',
+                'trailer << /Size 6 /Root 1 0 R >>',
+                'startxref',
+                '620',
+                '%%EOF'
+            ].join('\n');
+
+            return new Blob([pdfLines], { type: 'application/pdf' });
+        }
+
+        function downloadSinglePdf(pdfId) {
+            const pdf = appState.pdfGuides.find(p => p.id === pdfId);
+            if (!pdf) return;
+
+            if (pdf.dataUrl) {
+                const a = document.createElement('a');
+                a.href = pdf.dataUrl;
+                a.download = pdf.title.endsWith('.pdf') ? pdf.title : pdf.title + '.pdf';
+                a.click();
+                showToast(`Downloading ${pdf.title}...`, 'success');
+                return;
+            }
+
+            const blob = generateValidPdfBlob(pdf);
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = pdf.title.endsWith('.pdf') ? pdf.title : pdf.title + '.pdf';
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast(`Downloaded "${pdf.title}"`, 'success');
+        }
+
+        function downloadCurrentlyViewedPdf() {
+            downloadSinglePdf(currentViewedPdfId);
+        }
+
+        /* =========================================================================
+           9. CONNECT APPS (WORKFLOW AUTOMATION BRIDGES)
+           ========================================================================= */
+        function renderConnectionsModal() {
+            const container = document.getElementById('connectionsListContainer');
+            if (!container) return;
+
+            container.innerHTML = appState.connections.map((conn, idx) => `
+                <div class="p-3.5 rounded-xl bg-white border border-slate-200 flex items-center justify-between gap-3 shadow-2xs">
+                    <div class="flex items-center gap-3">
+                        <input type="checkbox" ${conn.active ? 'checked' : ''} onchange="toggleConnectionActive(${idx})" class="w-4 h-4 accent-plum rounded cursor-pointer">
+                        <div>
+                            <div class="flex items-center gap-2 text-xs font-bold text-slate-800">
+                                <span class="px-2 py-0.5 rounded bg-slate-100">${escapeHtml(conn.source)}</span>
+                                <i class="fa-solid fa-arrow-right text-sky-600"></i>
+                                <span class="px-2 py-0.5 rounded bg-sky-50 text-sky-800">${escapeHtml(conn.target)}</span>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-1">${escapeHtml(conn.rule)}</p>
+                        </div>
+                    </div>
+                    <button onclick="deleteConnection(${idx})" class="text-slate-400 hover:text-rose-600 p-1.5">
+                        <i class="fa-regular fa-trash-can"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function createAppConnection() {
+            const source = document.getElementById('connSourceSelect').value;
+            const target = document.getElementById('connTargetSelect').value;
+            const rule = document.getElementById('connRuleInput').value.trim() || `Sync records automatically from ${source} to ${target}`;
+
+            if (source === target) {
+                showToast('Please choose two different apps to connect', 'error');
+                return;
+            }
+
+            appState.connections.unshift({
+                id: 'conn-' + Date.now(),
+                source,
+                target,
+                rule,
+                active: true
+            });
+            document.getElementById('connRuleInput').value = '';
+            saveStateToStorage(true);
+            renderConnectionsModal();
+        }
+
+        function toggleConnectionActive(idx) {
+            if (!appState.connections[idx]) return;
+            appState.connections[idx].active = !appState.connections[idx].active;
+            saveStateToStorage(true);
+            renderConnectionsModal();
+        }
+
+        function deleteConnection(idx) {
+            appState.connections.splice(idx, 1);
+            saveStateToStorage(true);
+            renderConnectionsModal();
+        }
+
+        /* =========================================================================
+           10. CUSTOMIZE MODAL (PIN FAVORITES & TOGGLE VISIBILITY)
+           ========================================================================= */
+        function renderCustomizeModal() {
+            const listEl = document.getElementById('customizeAppsList');
+            if (!listEl) return;
+
+            document.getElementById('toggleStarBadges').checked = !!appState.settings.showStarBadges;
+
+            listEl.innerHTML = appState.apps.map((app, idx) => `
+                <div class="p-2.5 rounded-xl border border-slate-200 bg-white flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-2.5">
+                        <input type="checkbox" ${app.visible ? 'checked' : ''} onchange="toggleAppVisibility(${idx})" class="w-4 h-4 accent-plum rounded cursor-pointer" title="Show on NTURN Projects Grid">
+                        <span class="text-xs font-semibold text-slate-800">${escapeHtml(app.name)}</span>
+                    </div>
+                    <button onclick="toggleAppPinned(${idx})" class="px-2 py-1 rounded-lg text-xs ${app.pinned ? 'bg-amber-100 text-amber-800 font-semibold' : 'bg-slate-100 text-slate-400 hover:text-slate-700'} transition" title="Pin as Favorite">
+                        <i class="fa-solid fa-star"></i> ${app.pinned ? 'Pinned' : 'Pin'}
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function toggleAppVisibility(idx) {
+            appState.apps[idx].visible = !appState.apps[idx].visible;
+            saveStateToStorage(false);
+            renderAppsGrid();
+            renderCustomizeModal();
+        }
+
+        function toggleAppPinned(idx) {
+            appState.apps[idx].pinned = !appState.apps[idx].pinned;
+            saveStateToStorage(false);
+            renderAppsGrid();
+            renderCustomizeModal();
+        }
+
+        function toggleStarBadgesSetting(checked) {
+            appState.settings.showStarBadges = checked;
+            saveStateToStorage(false);
+            renderAppsGrid();
+        }
+
+        function resetAllAppsVisibility() {
+            appState.apps.forEach(a => a.visible = true);
+            saveStateToStorage(true);
+            renderAppsGrid();
+            renderCustomizeModal();
+        }
+
+        /* =========================================================================
+           11. FEEDBACK, BUG REPORT & FEATURE SUGGESTION WIDGET (BOTTOM RIGHT)
+           ========================================================================= */
+        function toggleFeedbackPanel() {
+            const panel = document.getElementById('feedbackPopover');
+            panel.classList.toggle('hidden');
+            if (!panel.classList.contains('hidden')) {
+                renderFeedbackHistory();
+            }
+        }
+
+        function setFeedbackType(type) {
+            currentFeedbackType = type;
+            const map = {
+                'Bug Report': 'fbTabBug',
+                'Feature Idea': 'fbTabFeature',
+                'New App': 'fbTabApp'
+            };
+            document.querySelectorAll('.fb-tab').forEach(btn => {
+                btn.className = 'fb-tab py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition';
+            });
+            const activeBtn = document.getElementById(map[type]);
+            if (activeBtn) {
+                activeBtn.className = 'fb-tab py-1.5 rounded-lg bg-white text-slate-800 shadow-2xs font-semibold transition';
+            }
+        }
+
+        function submitFeedbackItem() {
+            const app = document.getElementById('fbAppSelect').value;
+            const priority = document.getElementById('fbPrioritySelect').value;
+            const msgEl = document.getElementById('fbMessageInput');
+            const message = msgEl.value.trim();
+
+            if (!message) {
+                showToast('Please write your bug report or feature suggestion first', 'error');
+                return;
+            }
+
+            appState.feedbackLog.unshift({
+                id: 'fb-' + Date.now(),
+                type: currentFeedbackType,
+                app,
+                priority,
+                message,
+                date: new Date().toLocaleDateString(),
+                status: 'Saved'
+            });
+
+            msgEl.value = '';
+            saveStateToStorage(false);
+            renderFeedbackHistory();
+            showToast('Thank you! Your suggestion has been saved to the log.', 'success');
+        }
+
+        function renderFeedbackHistory() {
+            const listEl = document.getElementById('feedbackHistoryList');
+            if (!listEl) return;
+
+            if (appState.feedbackLog.length === 0) {
+                listEl.innerHTML = `<p class="text-xs text-slate-400 text-center py-3">No feedback items logged yet.</p>`;
+                return;
+            }
+
+            listEl.innerHTML = appState.feedbackLog.map((item, idx) => `
+                <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 text-xs">
+                    <div class="flex items-center justify-between gap-1 mb-1">
+                        <span class="font-bold text-slate-700">${escapeHtml(item.type)} • <span class="text-plum">${escapeHtml(item.app)}</span></span>
+                        <button onclick="deleteFeedbackItem(${idx})" class="text-slate-400 hover:text-rose-600">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                    <p class="text-slate-600 text-[11px] leading-snug">${escapeHtml(item.message)}</p>
+                </div>
+            `).join('');
+        }
+
+        function deleteFeedbackItem(idx) {
+            appState.feedbackLog.splice(idx, 1);
+            saveStateToStorage(false);
+            renderFeedbackHistory();
+        }
+
+        function exportFeedbackLog() {
+            const blob = new Blob([JSON.stringify(appState.feedbackLog, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `nturn-feedback-log-${Date.now()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('Exported feedback & bug log (.json)', 'success');
+        }
+
+        /* =========================================================================
+           12. FULL WORKSPACE BACKUP EXPORT & IMPORT (.JSON)
+           ========================================================================= */
+        function exportFullBackup() {
+            const backupPayload = {
+                platform: 'NTURN Projects',
+                version: '1.0.0',
+                exportedAt: new Date().toISOString(),
+                workspaceData: {
+                    apps: appState.apps.map(({ svg, ...rest }) => rest),
+                    connections: appState.connections,
+                    pdfGuides: appState.pdfGuides,
+                    codeTemplates: appState.codeTemplates,
+                    appRecords: appState.appRecords,
+                    feedbackLog: appState.feedbackLog,
+                    settings: appState.settings
+                }
+            };
+
+            const blob = new Blob([JSON.stringify(backupPayload, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            const dateStr = new Date().toISOString().slice(0, 10);
+            a.download = `NTURN-Projects-Backup-${dateStr}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+
+            showToast('Full workspace backup (.json) downloaded!', 'success');
+        }
+
+        function importFullBackup(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    const data = parsed.workspaceData || parsed;
+
+                    if (data.apps) {
+                        appState.apps = DEFAULT_APPS.map(defApp => {
+                            const savedApp = data.apps.find(a => a.id === defApp.id);
+                            return savedApp ? { ...defApp, ...savedApp, svg: defApp.svg } : defApp;
+                        });
+                    }
+                    if (data.connections) appState.connections = data.connections;
+                    if (data.pdfGuides) appState.pdfGuides = data.pdfGuides;
+                    if (data.codeTemplates) appState.codeTemplates = data.codeTemplates;
+                    if (data.appRecords) appState.appRecords = data.appRecords;
+                    if (data.feedbackLog) appState.feedbackLog = data.feedbackLog;
+                    if (data.settings) appState.settings = { ...appState.settings, ...data.settings };
+
+                    saveStateToStorage(false);
+                    renderAppsGrid();
+                    showToast('Backup restored! All your NTURN data is back.', 'success');
+                } catch (err) {
+                    showToast('Invalid backup JSON file. Please check the file format.', 'error');
+                }
+                event.target.value = '';
+            };
+            reader.readAsText(file);
+        }
+
+        /* =========================================================================
+           13. MODAL HELPERS, CLIPBOARD & TOAST NOTIFICATIONS
+           ========================================================================= */
+        function openModal(modalId) {
+            if (modalId === 'pdfGuidesModal') renderPdfGuidesList();
+            if (modalId === 'connectAppsModal') renderConnectionsModal();
+            if (modalId === 'customizeModal') renderCustomizeModal();
+            document.getElementById(modalId)?.classList.remove('hidden');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId)?.classList.add('hidden');
+        }
+
+        function populateAppSelectDropdowns() {
+            const fbSelect = document.getElementById('fbAppSelect');
+            const pdfAppTag = document.getElementById('pdfAppTagInput');
+            const pdfFilter = document.getElementById('pdfFilterSelect');
+            const connSource = document.getElementById('connSourceSelect');
+            const connTarget = document.getElementById('connTargetSelect');
+
+            DEFAULT_APPS.forEach((app, index) => {
+                if (fbSelect) fbSelect.innerHTML += `<option value="${app.name}">${app.name}</option>`;
+                if (pdfAppTag) pdfAppTag.innerHTML += `<option value="${app.name}">${app.name}</option>`;
+                if (pdfFilter) pdfFilter.innerHTML += `<option value="${app.name}">${app.name}</option>`;
+                if (connSource) connSource.innerHTML += `<option value="${app.name}" ${index === 8 ? 'selected' : ''}>${app.name}</option>`;
+                if (connTarget) connTarget.innerHTML += `<option value="${app.name}" ${index === 9 ? 'selected' : ''}>${app.name}</option>`;
+            });
+        }
+
+        function copyTextToClipboard(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+            } catch (err) {
+                console.error('Copy failed', err);
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            const colors = {
+                success: 'bg-slate-900 text-white border-emerald-500',
+                error: 'bg-rose-600 text-white border-rose-400',
+                info: 'bg-plum text-white border-amber-300'
+            };
+            const icons = {
+                success: 'fa-circle-check text-emerald-400',
+                error: 'fa-circle-exclamation text-white',
+                info: 'fa-circle-info text-amber-300'
+            };
+
+            toast.className = `pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-xl shadow-lg border-l-4 text-xs font-medium transition transform duration-200 ${colors[type] || colors.success}`;
+            toast.innerHTML = `
+                <i class="fa-solid ${icons[type] || icons.success} text-sm"></i>
+                <span>${escapeHtml(message)}</span>
+            `;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 220);
+            }, 3200);
+        }
+
+        function escapeHtml(str) {
+            if (typeof str !== 'string') return '';
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        // Close modals on Escape key
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                ['appWorkspaceModal', 'pdfGuidesModal', 'connectAppsModal', 'customizeModal'].forEach(closeModal);
+            }
+        });
+
+        // Initialize NTURN Projects Hub on load
+        window.onload = function() {
+            populateAppSelectDropdowns();
+            loadStateFromStorage();
+            renderAppsGrid();
+        };
+    </script>
+</body>
+</html>
